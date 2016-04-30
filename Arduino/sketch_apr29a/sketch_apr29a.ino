@@ -4,10 +4,7 @@
 
 #include <TinkerKit.h>
 
-#define COMMAND_BUTTON 0x1
-#define TARGET_BUTTON 0x1
-#define VALUE_ON 0x1
-#define VALUE_OFF 0x0
+#define MSG_LENGTH 8 * 4 // sizeof(float) == 4 octets
 #define INPUT_PIN I3
 
 AndroidAccessory acc("Manufacturer",
@@ -17,40 +14,39 @@ AndroidAccessory acc("Manufacturer",
                      "URI",
                      "Serial");
 
-byte sntmsg[3];
+byte msg[MSG_LENGTH];
 int lastButtonState;
 int currentButtonState;
+
+union FloatToByteArray
+{
+  float    f;
+  uint32_t byteArray[4];
+};
 
 void setup() {
   Serial.begin(115200);
   acc.powerOn();
-  sntmsg[0] = COMMAND_BUTTON;
-  sntmsg[1] = TARGET_BUTTON;
 }
 
 void loop() {
   if (acc.isConnected()) {
-    currentButtonState = digitalRead(INPUT_PIN);
+    float voltage = getVoltage(INPUT_PIN);
 
-    Serial.print(getVoltage(INPUT_PIN));
-    Serial.print("V :");
-    Serial.println(currentButtonState);
+    Serial.print(voltage);Serial.println("V ");
 
-    if (lastButtonState != currentButtonState) {
-      if (currentButtonState == LOW) {
-        sntmsg[2] = VALUE_ON;
-      } else {
-        sntmsg[2] = VALUE_OFF;
-      }
+    FloatToByteArray vConverter;
+    vConverter.f = voltage;
 
-      acc.write(sntmsg, 3);
-      lastButtonState = currentButtonState;
-    }
+    memcpy(msg, vConverter.byteArray, 4); //float sur 4 byte
+
+    //Serial.println(msg);
+    acc.write(msg, MSG_LENGTH);
 
     delay(1000);
   } else {
-    Serial.print("AndroidAccessory not connected at ");
-    Serial.println(millis());
+    Serial.print("AndroidAccessory not connected at ");Serial.println(millis());
+
     delay(2000);
   }
 }

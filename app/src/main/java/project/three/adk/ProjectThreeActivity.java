@@ -18,6 +18,8 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class ProjectThreeActivity extends Activity {
 
@@ -45,7 +47,7 @@ public class ProjectThreeActivity extends Activity {
         @Override
         public void run() {
             int ret = 0;
-            final byte[] buffer = new byte[3];
+            final byte[] buffer = new byte[4];
 
             while (ret >= 0) {
                 try {
@@ -54,30 +56,19 @@ public class ProjectThreeActivity extends Activity {
                     break;
                 }
 
-                switch (buffer[0]) {
-                    case COMMAND_BUTTON:
+                ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+                byteBuffer.order(ByteOrder.LITTLE_ENDIAN); //arduino c'est du LITTLE_ENDIAN cf doc.
+                byteBuffer.position(0);
+                final float floatVoltage = byteBuffer.getFloat();
 
-                        if (buffer[1] == TARGET_BUTTON) {
-                            if (buffer[2] == VALUE_ON) {
-                                startVibrate();
-                            } else if (buffer[2] == VALUE_OFF) {
-                                stopVibrate();
-                            }
-                            runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    buttonStateTextView.setText(buffer[2] == VALUE_ON ? BUTTON_PRESSED_TEXT : BUTTON_NOT_PRESSED_TEXT);
-                                }
-                            });
-                        }
-                        break;
+                    @Override
+                    public void run() {
+                        buttonStateTextView.setText("msg lengt : "+ buffer.length +" = "+ floatVoltage +"V \r\n");
+                    }
+                });
 
-                    default:
-                        Log.d(TAG, "unknown msg: " + buffer[0]);
-
-                        break;
-                }
             }
         }
     };
