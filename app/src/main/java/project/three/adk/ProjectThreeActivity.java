@@ -12,7 +12,10 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -39,15 +42,19 @@ public class ProjectThreeActivity extends Activity {
     private FileInputStream mInputStream;
     private FileOutputStream mOutputStream;
     private TextView buttonStateTextView;
+    private Button buttonSendDataView;
 
 	private Vibrator vibrator;
 	private boolean isVibrating;
+
+    private int nbTourJoueur1 = 0;
+    private int nbTourJoueur2 = 0;
     Runnable commRunnable = new Runnable() {
 
         @Override
         public void run() {
             int ret = 0;
-            final byte[] buffer = new byte[4];
+            final byte[] buffer = new byte[4+4];
 
             while (ret >= 0) {
                 try {
@@ -59,13 +66,19 @@ public class ProjectThreeActivity extends Activity {
                 ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
                 byteBuffer.order(ByteOrder.LITTLE_ENDIAN); //arduino c'est du LITTLE_ENDIAN cf doc.
                 byteBuffer.position(0);
-                final float floatVoltage = byteBuffer.getFloat();
+                final float irVoltage = byteBuffer.getFloat();
+
+                if(irVoltage < 3 && irVoltage >= 2){
+                    nbTourJoueur1++;
+                }else if(irVoltage >= 3){
+                    nbTourJoueur2++;
+                }
 
                 runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
-                        buttonStateTextView.setText("msg lengt : "+ buffer.length +" = "+ floatVoltage +"V \r\n");
+                        buttonStateTextView.setText("msg length : "+ buffer.length +" = "+ irVoltage +"V "+"\r\n"+"tour j1 :"+ nbTourJoueur1 +"\r\n"+"tour j2 :"+nbTourJoueur2);
                     }
                 });
 
@@ -112,9 +125,30 @@ public class ProjectThreeActivity extends Activity {
 		setContentView(R.layout.main);
 		buttonStateTextView = (TextView) findViewById(R.id.button_state_text_view);
 
+        buttonSendDataView = (Button) findViewById(R.id.sendDataBtn);
+        buttonSendDataView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "sendData ", Toast.LENGTH_SHORT).show();
+                sendData();
+            }
+        });
+
         vibrator = ((Vibrator) getSystemService(VIBRATOR_SERVICE));
 	}
 
+    public void sendData(){
+        byte[] buffer = new byte[8];
+
+        buffer[0]=(byte)1; // button says off, light is on
+
+        if (mOutputStream != null) {
+            try {
+                mOutputStream.write(buffer);
+            } catch (IOException e) {
+            }
+        }
+    }
 	/**
 	 * Called when the activity is resumed from its paused state and immediately
 	 * after onCreate().
