@@ -38,6 +38,13 @@ union FloatToByteArray
   uint32_t byteArray[4];
 };
 
+union ByteArrayToInt
+{
+  uint32_t byteArray[4];
+  int    i;
+};
+ByteArrayToInt intConverter;
+
 void setup() {
   Serial.begin(115200);
   acc.powerOn();
@@ -78,7 +85,11 @@ void loop() {
     //Partie reception donnees depuis android
     len = acc.read(msgReceived, MSG_LENGTH, 1);
     if(len > 0){
-      blinkLedIntegratedXtimes(len);
+      memcpy(intConverter.byteArray, msgReceived, 4); //int sur 4 byte
+      int nbBlink = intConverter.i;
+      Serial.print("Recu : ");Serial.println(nbBlink);
+      
+      blinkLedIntegratedXtimes(nbBlink);
     }
     
     //Partie envoi a android

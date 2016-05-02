@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class ProjectThreeActivity extends Activity {
     private FileInputStream mInputStream;
     private FileOutputStream mOutputStream;
     private TextView buttonStateTextView;
+    private EditText editTextView;
     private Button buttonSendDataView;
 
 	private Vibrator vibrator;
@@ -122,25 +124,31 @@ public class ProjectThreeActivity extends Activity {
 		filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
 		registerReceiver(mUsbReceiver, filter);
 
-		setContentView(R.layout.main);
-		buttonStateTextView = (TextView) findViewById(R.id.button_state_text_view);
+        setContentView(R.layout.main);
+
+        editTextView = (EditText) findViewById(R.id.editText);
 
         buttonSendDataView = (Button) findViewById(R.id.sendDataBtn);
         buttonSendDataView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String editText = editTextView.getText() == null ? "" : editTextView.getText().toString();
+                int nbBlink = Integer.parseInt(editText);
+
                 Toast.makeText(getApplicationContext(), "sendData ", Toast.LENGTH_SHORT).show();
-                sendData();
+                sendData(nbBlink);
             }
         });
+
+        buttonStateTextView = (TextView) findViewById(R.id.button_state_text_view);
 
         vibrator = ((Vibrator) getSystemService(VIBRATOR_SERVICE));
 	}
 
-    public void sendData(){
+    public void sendData(int nbBlink){
         byte[] buffer = new byte[8];
 
-        buffer[0]=(byte)1; // button says off, light is on
+        buffer[0]= (byte) nbBlink; // button says off, light is on
 
         if (mOutputStream != null) {
             try {
