@@ -37,6 +37,7 @@ union FloatToByteArray
   float    f;
   uint32_t byteArray[4];
 };
+FloatToByteArray irConverter;
 
 union ByteArrayToInt
 {
@@ -48,7 +49,7 @@ ByteArrayToInt intConverter;
 void setup() {
   Serial.begin(115200);
   acc.powerOn();
-  
+
   pinMode(INPUT_PIN_LDR, INPUT);
   pinMode(OUTPUT_PIN_LED, OUTPUT);
   digitalWrite(OUTPUT_PIN_LED, HIGH);
@@ -63,7 +64,6 @@ void loop() {
 
     //Serial.print("IR :");Serial.print(IR_Voltage);Serial.print("V ");
 
-    FloatToByteArray irConverter;
     irConverter.f = IR_Voltage;
 
     memcpy(msg, irConverter.byteArray, 4); //float sur 4 byte
@@ -88,10 +88,10 @@ void loop() {
       memcpy(intConverter.byteArray, msgReceived, 4); //int sur 4 byte
       int nbBlink = intConverter.i;
       Serial.print("Recu : ");Serial.println(nbBlink);
-      
+
       blinkLedIntegratedXtimes(nbBlink);
     }
-    
+
     //Partie envoi a android
     acc.write(msg, MSG_LENGTH);
 

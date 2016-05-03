@@ -49,6 +49,10 @@ public class ProjectThreeActivity extends Activity {
 	private Vibrator vibrator;
 	private boolean isVibrating;
 
+    private long prevMillis = 0;
+    private long intervalMillis = 1000;
+    private long curMillis = 0;
+    private float maxIrVoltageSurUneSec = 0;
     private int nbTourJoueur1 = 0;
     private int nbTourJoueur2 = 0;
     Runnable commRunnable = new Runnable() {
@@ -56,6 +60,7 @@ public class ProjectThreeActivity extends Activity {
         @Override
         public void run() {
             int ret = 0;
+
             final byte[] buffer = new byte[4+4];
 
             while (ret >= 0) {
@@ -70,10 +75,23 @@ public class ProjectThreeActivity extends Activity {
                 byteBuffer.position(0);
                 final float irVoltage = byteBuffer.getFloat();
 
-                if(irVoltage < 3 && irVoltage >= 2){
-                    nbTourJoueur1++;
-                }else if(irVoltage >= 3){
-                    nbTourJoueur2++;
+                if(maxIrVoltageSurUneSec < irVoltage){
+                    maxIrVoltageSurUneSec = irVoltage;
+                }
+
+                curMillis = System.currentTimeMillis();
+                //si une seconde s'est écoulée
+                if ((curMillis - prevMillis) >= intervalMillis) {
+
+                    if(maxIrVoltageSurUneSec < 3 && maxIrVoltageSurUneSec >= 2){
+                        nbTourJoueur1++;
+                    }else if(maxIrVoltageSurUneSec >= 3){
+                        nbTourJoueur2++;
+                    }
+
+                    //reset pour la prochaine seconde
+                    maxIrVoltageSurUneSec = 0;
+                    prevMillis = System.currentTimeMillis();
                 }
 
                 runOnUiThread(new Runnable() {
