@@ -14,7 +14,6 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import it.moondroid.seekbarhint.library.SeekBarHint;
 
 public class ProjectThreeActivity extends Activity {
 
@@ -43,7 +44,7 @@ public class ProjectThreeActivity extends Activity {
     private FileInputStream mInputStream;
     private FileOutputStream mOutputStream;
     private TextView buttonStateTextView;
-    private SeekBar seekBarView;
+    private SeekBarHint seekBar;
     private Button buttonSendDataView;
 
 	private Vibrator vibrator;
@@ -144,13 +145,22 @@ public class ProjectThreeActivity extends Activity {
 
         setContentView(R.layout.main);
 
-        seekBarView = (SeekBar) findViewById(R.id.seekBar);
+        seekBar = (SeekBarHint) findViewById(R.id.seekBar);
+        seekBar.setMax(255);
+        seekBar.setProgress(100);
+        seekBar.incrementProgressBy(5);
+        seekBar.setOnProgressChangeListener(new SeekBarHint.OnSeekBarHintProgressChangeListener() {
+            @Override
+            public String onHintTextChanged(SeekBarHint seekBarHint, int progress) {
+                return String.format("Vitesse de %d", progress);
+            }
+        });
 
         buttonSendDataView = (Button) findViewById(R.id.sendDataBtn);
         buttonSendDataView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int seekBarValue = seekBarView.getProgress();
+                int seekBarValue = seekBar.getProgress();
 
                 Toast.makeText(getApplicationContext(), "sendData : "+ seekBarValue, Toast.LENGTH_SHORT).show();
                 sendData(seekBarValue);

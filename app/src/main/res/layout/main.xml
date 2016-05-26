@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:hint="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
@@ -7,13 +8,14 @@
               android:weightSum="1">
 
 
-    <SeekBar
+    <it.moondroid.seekbarhint.library.SeekBarHint
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
-        android:max="255"
-        android:progress="100"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        hint:popupWidth="130dp"
+        hint:yOffset="150dp"
+        hint:popupStyle="follow"/>
 
     <Button
             android:layout_width="wrap_content"

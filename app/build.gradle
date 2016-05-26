@@ -16,4 +16,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    repositories {
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+    dependencies {
+        compile 'com.github.moondroid:SeekBarHint:4468a69989'
+    }
 }
