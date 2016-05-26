@@ -14,7 +14,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,14 +43,14 @@ public class ProjectThreeActivity extends Activity {
     private FileInputStream mInputStream;
     private FileOutputStream mOutputStream;
     private TextView buttonStateTextView;
-    private EditText editTextView;
+    private SeekBar seekBarView;
     private Button buttonSendDataView;
 
 	private Vibrator vibrator;
 	private boolean isVibrating;
 
     private long prevMillis = 0;
-    private long intervalMillis = 1000;
+    private long intervalMillis = 2000;
     private long curMillis = 0;
     private float maxIrVoltageSurUneSec = 0;
     private int nbTourJoueur1 = 0;
@@ -144,17 +144,16 @@ public class ProjectThreeActivity extends Activity {
 
         setContentView(R.layout.main);
 
-        editTextView = (EditText) findViewById(R.id.editText);
+        seekBarView = (SeekBar) findViewById(R.id.seekBar);
 
         buttonSendDataView = (Button) findViewById(R.id.sendDataBtn);
         buttonSendDataView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String editText = editTextView.getText() == null ? "" : editTextView.getText().toString();
-                int nbBlink = Integer.parseInt(editText);
+                int seekBarValue = seekBarView.getProgress();
 
-                Toast.makeText(getApplicationContext(), "sendData ", Toast.LENGTH_SHORT).show();
-                sendData(nbBlink);
+                Toast.makeText(getApplicationContext(), "sendData : "+ seekBarValue, Toast.LENGTH_SHORT).show();
+                sendData(seekBarValue);
             }
         });
 

@@ -7,12 +7,12 @@
               android:weightSum="1">
 
 
-    <EditText
+    <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/seekBar"
+        android:max="255"
+        android:progress="100"
         android:layout_gravity="center_horizontal"/>
 
     <Button
