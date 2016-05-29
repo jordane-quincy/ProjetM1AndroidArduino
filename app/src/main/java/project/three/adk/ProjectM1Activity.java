@@ -26,9 +26,9 @@ import java.nio.ByteOrder;
 
 import it.moondroid.seekbarhint.library.SeekBarHint;
 
-public class ProjectThreeActivity extends Activity {
+public class ProjectM1Activity extends Activity {
 
-	private static final String TAG = ProjectThreeActivity.class.getSimpleName();
+	private static final String TAG = ProjectM1Activity.class.getSimpleName();
 	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 	private static final byte COMMAND_BUTTON = 0x1;
 	private static final byte TARGET_BUTTON = 0x1;

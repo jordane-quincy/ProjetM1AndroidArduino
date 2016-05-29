@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <usb-accessory manufacturer="Manufacturer" model="Project03" version="Version" />
+    <!-- Pour indiquer a android que cette application est pour notre projet :-->
+    <usb-accessory manufacturer="J-B DURIEZ et Jordane QUINCY" model="ProjectM1" version="1.0" />
 </resources>

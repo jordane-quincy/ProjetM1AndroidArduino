@@ -18,13 +18,13 @@
 
 #define LED_INTEGRATED 13 //sur l'arduino mega adk, il y a une led integre sur la carte sur le pin 13
 
-//auto declaration (pour que l'android puisse nous presenter a l'utilisateur et se souvenir des autorisations accordees)
-AndroidAccessory acc("Manufacturer",
-                     "Project03",
-                     "Description",
-                     "Version",
-                     "URI",
-                     "Serial");
+//creation de l'objet AndroidAccessory qui implemente le protocole Android Open Accessory (AOA)
+AndroidAccessory acc("J-B DURIEZ et Jordane QUINCY",
+                     "ProjectM1",
+                     "Accesoire android du Projet de Master 1 TNSI",
+                     "1.0",
+                     "https://github.com/jordane-quincy/ProjetM1AndroidArduino",
+                     "0123456789876543");
 
 byte msgToSend[MSG_LENGTH_TO_SEND];
 
