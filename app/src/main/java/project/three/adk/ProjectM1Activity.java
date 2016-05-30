@@ -53,6 +53,7 @@ public class ProjectM1Activity extends Activity {
     private float nouveauVoltage = 0;
     private boolean isGrowing = true; // lorsque l'on stagne, on considère que c'est vrai aussi
     private boolean isGrowingAncien = true;
+    private boolean isTurnUp = false;
 
     private float ancienVoltageJ1 = 0;
     private float nouveauVoltageJ1 = 0;
@@ -88,13 +89,19 @@ public class ProjectM1Activity extends Activity {
                 ancienVoltage = nouveauVoltage;
                 nouveauVoltage = irVoltage;
 
+                if(irVoltage < SEUIL_VOLTAGE_J2 && isTurnUp){
+                    isTurnUp=false;
+                }
+
                 isGrowingAncien = isGrowing;
                 isGrowing = nouveauVoltage > ancienVoltage;
-                if (!isGrowing & isGrowingAncien) {
+                if (!isGrowing & isGrowingAncien & !isTurnUp) {
                     if (ancienVoltage > SEUIL_VOLTAGE_J1) {
                         nbTourJoueur1++;
+                        isTurnUp = true;
                     } else if (ancienVoltage > SEUIL_VOLTAGE_J2) {
                         nbTourJoueur2++;
+                        isTurnUp = true;
                     }
                 }
 
@@ -124,7 +131,8 @@ public class ProjectM1Activity extends Activity {
                                         "ancienVoltage : " + ancienVoltage + "\r\n" +
                                         "nouveauVoltage : " + nouveauVoltage + "\r\n" +
                                         "SEUIL_VOLTAGE_J1 : " + SEUIL_VOLTAGE_J1 + "\r\n" +
-                                        "SEUIL_VOLTAGE_J2 : " + SEUIL_VOLTAGE_J2 + "\r\n"
+                                        "SEUIL_VOLTAGE_J2 : " + SEUIL_VOLTAGE_J2 + "\r\n" +
+                                        "isTurnUp : " + isTurnUp + "\r\n"
                         );
                     }
                 });
@@ -150,6 +158,7 @@ public class ProjectM1Activity extends Activity {
                 UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
                 if (accessory != null && accessory.equals(mAccessory)) {
                     closeAccessory();
+                    manageArduinoDisconnected();
                 }
             }
         }
@@ -277,7 +286,6 @@ public class ProjectM1Activity extends Activity {
     }
 
     private void closeAccessory() {
-        manageArduinoDisconnected();
         try {
             if (mFileDescriptor != null) {
                 mFileDescriptor.close();
