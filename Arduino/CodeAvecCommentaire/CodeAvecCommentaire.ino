@@ -14,7 +14,7 @@
 #define MSG_LENGTH_TO_RECEIVED 8 //taille (en byte) prevu pour le message qui transitera de l'android a l'arduino
 
 #define INPUT_PIN_IR1 A9 //le capteur infra-rouge 1 est branche sur le pin A9
-#define INPUT_PIN_IR1 A10 //le capteur infra-rouge 2 est branche sur le pin A10
+#define INPUT_PIN_IR2 A10 //le capteur infra-rouge 2 est branche sur le pin A10
 
 #define LED_INTEGRATED 13 //sur l'arduino mega adk, il y a une led integre sur la carte sur le pin 13
 
@@ -38,6 +38,7 @@ union FloatToByteArray
   uint32_t byteArray[FLOAT_SIZE];
 };
 FloatToByteArray ir1Converter;
+FloatToByteArray ir2Converter;
 
 //Convertisseur de tableau de byte en int (et inversement)
 union ByteArrayToInt
@@ -52,6 +53,7 @@ void setup() {
   Serial.begin(115200); //on configure la vitesse de la liaison serie avec le pc a 115200 bits/sec (la plus veloce)
   acc.powerOn(); //on alimente l'accesoire
   pinMode(LED_INTEGRATED, OUTPUT); //on configure le pin de la led integre comme etant une sortie
+  pinMode(INPUT_PIN_IR1, INPUT); //on configure le pin du capteur infraèrouge 1 comme etant une entree
 }
 
 //apres setup(), loop est lancee en boucle indefiniment (equivalent d'un while(true){} )
@@ -64,9 +66,21 @@ void loop() {
 
     ir1Converter.f = IR1_Voltage; // on set le voltage du capteur infra-rouge 1 dans le converter
 
-  // ir1Converter converti les donnees du capteur infra-rouge 1 sous forme de tableau de byte
+    // ir1Converter converti les donnees du capteur infra-rouge 1 sous forme de tableau de byte
     memcpy(msgToSend, ir1Converter.byteArray, FLOAT_SIZE); // copie de FLOAT_SIZE octet (byte) du tableau de byte dans le message a envoyer a l'android
 
+    //Partie pour de deuxieme capteur infra rouge (que l'on a pas pour l'intant)
+    /*
+        //partie IR2
+        float IR2_Voltage = getVoltage(INPUT_PIN_IR2); //obtention du voltage
+    
+        Serial.print("IR2 :");Serial.print(IR2_Voltage);Serial.print("V \n");
+    
+        ir2Converter.f = IR2_Voltage; // on set le voltage du capteur infra-rouge 1 dans le converter
+    
+        // ir2Converter converti les donnees du capteur infra-rouge 2 sous forme de tableau de byte
+        memcpy(msgToSend, ir2Converter.byteArray, FLOAT_SIZE); // copie de FLOAT_SIZE octet (byte) du tableau de byte dans le message a envoyer a l'android
+    */
     //Partie reception donnees depuis android
     //len va contenir la longeur du message recu de l'android
     len = acc.read(msgReceived, MSG_LENGTH_TO_RECEIVED, 1);

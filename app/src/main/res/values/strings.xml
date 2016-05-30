@@ -4,4 +4,5 @@
     <string name="sendData">Send data</string>
     <string name="nbTourJ1">Player 1 lap counter</string>
     <string name="nbTourJ2">Player 2 lap counter</string>
+    <string name="arduinoDisconnected">Arduino disconnected</string>
 </resources>

@@ -215,7 +215,6 @@ public class ProjectM1Activity extends Activity {
 	public void onPause() {
 		super.onPause();
 		closeAccessory();
-		stopVibrate();
 	}
 
 	/**
@@ -244,7 +243,8 @@ public class ProjectM1Activity extends Activity {
 	}
 
 	private void closeAccessory() {
-		try {
+        manageArduinoDisconnected();
+        try {
 			if (mFileDescriptor != null) {
 				mFileDescriptor.close();
 			}
@@ -256,16 +256,13 @@ public class ProjectM1Activity extends Activity {
 	}
 
 	public void startVibrate() {
-		if(vibrator != null && !isVibrating) {
-			isVibrating = true;
-			vibrator.vibrate(new long[]{0, 1000, 250}, 0);
-		}
+        vibrator.vibrate(1000); //vibre pendant 1000 ms
 	}
 
-    public void stopVibrate() {
-		if(vibrator != null && isVibrating) {
-			isVibrating = false;
-			vibrator.cancel();
-		}
-	}
+    private void manageArduinoDisconnected(){
+        Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.arduinoDisconnected), Toast.LENGTH_LONG).show();
+        startVibrate();
+        //fermeture de cette activity
+        this.finish();
+    }
 }
