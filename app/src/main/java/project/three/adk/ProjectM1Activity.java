@@ -47,7 +47,7 @@ public class ProjectM1Activity extends Activity {
     private long prevMillis = 0;
     private final long intervalMillis = 2000;
     private long curMillis = 0;
-    private float maxIrVoltageSurUneSec = 0;
+    private float maxIr1VoltageSurUneSec = 0;
     private int nbTourJoueur1 = 0;
     private int nbTourJoueur2 = 0;
     Runnable commRunnable = new Runnable() {
@@ -71,22 +71,20 @@ public class ProjectM1Activity extends Activity {
                 byteBuffer.position(0);
                 final float irVoltage = byteBuffer.getFloat();
 
-                if(maxIrVoltageSurUneSec < irVoltage){
-                    maxIrVoltageSurUneSec = irVoltage;
+                if(maxIr1VoltageSurUneSec < irVoltage){
+                    maxIr1VoltageSurUneSec = irVoltage;
                 }
 
                 curMillis = System.currentTimeMillis();
                 //si deux secondes se sont écoulées
                 if ((curMillis - prevMillis) >= intervalMillis) {
 
-                    if(maxIrVoltageSurUneSec < 3 && maxIrVoltageSurUneSec >= 2){
+                    if(maxIr1VoltageSurUneSec >= 1.70){
                         nbTourJoueur1++;
-                    }else if(maxIrVoltageSurUneSec >= 3){
-                        nbTourJoueur2++;
                     }
 
                     //reset pour la prochaine seconde
-                    maxIrVoltageSurUneSec = 0;
+                    maxIr1VoltageSurUneSec = 0;
                     prevMillis = System.currentTimeMillis();
                 }
 
