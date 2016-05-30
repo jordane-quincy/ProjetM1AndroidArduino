@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Projet M1 TNSI App</string>
+    <string name="app_name">M1 TNSI Project App</string>
+    <string name="sendData">Send data</string>
+    <string name="nbTourJ1">Player 1 lap counter</string>
+    <string name="nbTourJ2">Player 2 lap counter</string>
 </resources>

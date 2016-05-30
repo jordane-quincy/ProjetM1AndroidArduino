@@ -8,8 +8,10 @@
 
     <application android:icon="@drawable/icon" android:label="@string/app_name" >
         <uses-library android:name="com.android.future.usb.accessory" />
+        <!-- activity uniquement en portrait mais selon le capteur dans un sens ou l'autre -->
         <activity android:name=".ProjectM1Activity"
-                  android:label="@string/app_name" android:screenOrientation="portrait">
+                  android:label="@string/app_name"
+                  android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Projet M1 TNSI App</string>
+    <string name="sendData">Envoi</string>
+    <string name="nbTourJ1">Joueur 1 compteur de tour</string>
+    <string name="nbTourJ2">Joueur 2 compteur de tour</string>
+</resources>

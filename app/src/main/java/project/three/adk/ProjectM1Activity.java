@@ -30,12 +30,6 @@ public class ProjectM1Activity extends Activity {
 
 	private static final String TAG = ProjectM1Activity.class.getSimpleName();
 	private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
-	private static final byte COMMAND_BUTTON = 0x1;
-	private static final byte TARGET_BUTTON = 0x1;
-	private static final byte VALUE_ON = 0x1;
-	private static final byte VALUE_OFF = 0x0;
-	private static final String BUTTON_PRESSED_TEXT = "The Button is pressed!";
-	private static final String BUTTON_NOT_PRESSED_TEXT = "The Button is not pressed!";
     private PendingIntent mPermissionIntent;
     private boolean mPermissionRequestPending;
     private UsbManager mUsbManager;
@@ -51,7 +45,7 @@ public class ProjectM1Activity extends Activity {
 	private boolean isVibrating;
 
     private long prevMillis = 0;
-    private long intervalMillis = 2000;
+    private final long intervalMillis = 2000;
     private long curMillis = 0;
     private float maxIrVoltageSurUneSec = 0;
     private int nbTourJoueur1 = 0;
@@ -62,6 +56,7 @@ public class ProjectM1Activity extends Activity {
         public void run() {
             int ret = 0;
 
+            //buffer pour les donnees a recevoir de la carte arduino
             final byte[] buffer = new byte[4+4];
 
             while (ret >= 0) {
@@ -81,7 +76,7 @@ public class ProjectM1Activity extends Activity {
                 }
 
                 curMillis = System.currentTimeMillis();
-                //si une seconde s'est écoulée
+                //si deux secondes se sont écoulées
                 if ((curMillis - prevMillis) >= intervalMillis) {
 
                     if(maxIrVoltageSurUneSec < 3 && maxIrVoltageSurUneSec >= 2){
@@ -95,11 +90,15 @@ public class ProjectM1Activity extends Activity {
                     prevMillis = System.currentTimeMillis();
                 }
 
+                //mise à jour de la vue utilisateur
                 runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
-                        buttonStateTextView.setText("msg length : "+ buffer.length +" = "+ irVoltage +"V "+"\r\n"+"tour j1 :"+ nbTourJoueur1 +"\r\n"+"tour j2 :"+nbTourJoueur2);
+                        String t = getApplicationContext().getResources().getString(R.string.nbTourJ1);
+                        buttonStateTextView.setText("msg length : "+ buffer.length +" = "+ irVoltage +"V "+"\r\n"+
+                                "tour j1 :"+ nbTourJoueur1 +"\r\n"+
+                                "tour j2 :"+ nbTourJoueur2);
                     }
                 });
 
@@ -113,12 +112,10 @@ public class ProjectM1Activity extends Activity {
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (this) {
                     UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
-                    if (intent.getBooleanExtra(
-                            UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         openAccessory(accessory);
                     } else {
-                        Log.d(TAG, "permission denied for accessory "
-                                + accessory);
+                        Log.d(TAG, "permission denied for accessory "+ accessory);
                     }
                     mPermissionRequestPending = false;
                 }
