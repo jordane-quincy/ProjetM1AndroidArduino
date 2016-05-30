@@ -68,10 +68,10 @@ void loop() {
     memcpy(msgToSend, ir1Converter.byteArray, FLOAT_SIZE); // copie de FLOAT_SIZE octet (byte) du tableau de byte dans le message a envoyer a l'android
 
     //Partie reception donnees depuis android
-  //len va contenir la longeur du message recu de l'android
+    //len va contenir la longeur du message recu de l'android
     len = acc.read(msgReceived, MSG_LENGTH_TO_RECEIVED, 1);
     //si on a bien reçu des donnes de l'android
-  if(len > 0){
+    if(len > 0){
       memcpy(intConverter.byteArray, msgReceived, INT_SIZE); //on utilise le tableau de byte du converter pour y mettre les donnees du telephone
       int nbBlink = intConverter.i;
       Serial.print("Recu : ");Serial.println(nbBlink);
