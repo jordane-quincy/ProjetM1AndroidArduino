@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,9 @@ public class ProjectM1Activity extends Activity {
     private Button buttonSendDataView;
     private EditText lapJ1;
     private EditText lapJ2;
+
+    //par defaut on n'affiche pas les informations de debug
+    private boolean isDebugInfoShow = false;
 
     private Vibrator vibrator;
 
@@ -113,17 +117,19 @@ public class ProjectM1Activity extends Activity {
                         String t = getApplicationContext().getResources().getString(R.string.nbTourJ1);
                         lapJ1.setText(nbTourJoueur1);
                         lapJ2.setText(nbTourJoueur2);
-                        buttonStateTextView.setText("msg length : " + buffer.length + " = " + irVoltage + "V " + "\r\n" +
-                                        "tour j1 :" + nbTourJoueur1 + "\r\n" +
-                                        "tour j2 :" + nbTourJoueur2 + "\r\n" +
-                                        "isGrowingAncien : " + isGrowingAncien + "\r\n" +
-                                        "isGrowing : " + isGrowing + "\r\n" +
-                                        "ancienVoltage : " + ancienVoltage + "\r\n" +
-                                        "nouveauVoltage : " + nouveauVoltage + "\r\n" +
-                                        "SEUIL_VOLTAGE_J1 : " + SEUIL_VOLTAGE_J1 + "\r\n" +
-                                        "SEUIL_VOLTAGE_J2 : " + SEUIL_VOLTAGE_J2 + "\r\n" +
-                                        "isTurnUp : " + isTurnUp + "\r\n"
-                        );
+                        if(isDebugInfoShow) {
+                            buttonStateTextView.setText("msg length : " + buffer.length + " = " + irVoltage + "V " + "\r\n" +
+                                            "tour j1 :" + nbTourJoueur1 + "\r\n" +
+                                            "tour j2 :" + nbTourJoueur2 + "\r\n" +
+                                            "isGrowingAncien : " + isGrowingAncien + "\r\n" +
+                                            "isGrowing : " + isGrowing + "\r\n" +
+                                            "ancienVoltage : " + ancienVoltage + "\r\n" +
+                                            "nouveauVoltage : " + nouveauVoltage + "\r\n" +
+                                            "SEUIL_VOLTAGE_J1 : " + SEUIL_VOLTAGE_J1 + "\r\n" +
+                                            "SEUIL_VOLTAGE_J2 : " + SEUIL_VOLTAGE_J2 + "\r\n" +
+                                            "isTurnUp : " + isTurnUp + "\r\n"
+                            );
+                        }
                     }
                 });
 
@@ -301,5 +307,15 @@ public class ProjectM1Activity extends Activity {
         startVibrate();
         //fermeture de cette activity
         this.finish();
+    }
+
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            //inversion du boolean
+            isDebugInfoShow = !isDebugInfoShow;
+            //stop la propagation de l'event
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }
