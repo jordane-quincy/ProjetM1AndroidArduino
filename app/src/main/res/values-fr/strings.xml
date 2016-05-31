@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Projet M1 TNSI App</string>
     <string name="sendData">Envoi</string>
-    <string name="nbTourJ1">Joueur 1 compteur de tour</string>
-    <string name="nbTourJ2">Joueur 2 compteur de tour</string>
+    <string name="nbTourJ1">Compteur de tour joueur 1</string>
+    <string name="nbTourJ2">Compteur de tour joueur 2</string>
     <string name="arduinoDisconnected">Arduino déconnecté</string>
 </resources>

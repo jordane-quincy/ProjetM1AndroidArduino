@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class ProjectM1Activity extends Activity {
     private TextView buttonStateTextView;
     private SeekBarHint seekBar;
     private Button buttonSendDataView;
+    private EditText lapJ1;
+    private EditText lapJ2;
 
     private Vibrator vibrator;
 
@@ -108,6 +111,8 @@ public class ProjectM1Activity extends Activity {
                     @Override
                     public void run() {
                         String t = getApplicationContext().getResources().getString(R.string.nbTourJ1);
+                        lapJ1.setText(nbTourJoueur1);
+                        lapJ2.setText(nbTourJoueur2);
                         buttonStateTextView.setText("msg length : " + buffer.length + " = " + irVoltage + "V " + "\r\n" +
                                         "tour j1 :" + nbTourJoueur1 + "\r\n" +
                                         "tour j2 :" + nbTourJoueur2 + "\r\n" +
@@ -188,6 +193,11 @@ public class ProjectM1Activity extends Activity {
         });
 
         buttonStateTextView = (TextView) findViewById(R.id.button_state_text_view);
+
+        lapJ1 = (EditText) findViewById(R.id.lapJ1);
+        lapJ1.setText("0"); //init
+        lapJ2 = (EditText) findViewById(R.id.lapJ2);
+        lapJ2.setText("0"); //init
 
         vibrator = ((Vibrator) getSystemService(VIBRATOR_SERVICE));
     }
