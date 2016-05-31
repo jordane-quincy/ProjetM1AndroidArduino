@@ -42,25 +42,16 @@ public class ProjectM1Activity extends Activity {
     private Button buttonSendDataView;
 
     private Vibrator vibrator;
-    private boolean isVibrating;
-
-    private long prevMillis = 0;
-    private final long intervalMillis = 2000;
-    private long curMillis = 0;
-    private float maxIr1VoltageSurUneSec = 0;
 
     private float ancienVoltage = 0;
     private float nouveauVoltage = 0;
-    private boolean isGrowing = true; // lorsque l'on stagne, on considère que c'est vrai aussi
+    private boolean isGrowing = true; // lorsque l'on est a l'arret, on considère que c'est vrai aussi
     private boolean isGrowingAncien = true;
     private boolean isTurnUp = false;
 
-    private float ancienVoltageJ1 = 0;
-    private float nouveauVoltageJ1 = 0;
+    // Seuil minimum (en Volt) pour detecter le passage du joueur 1
     private final float SEUIL_VOLTAGE_J1 = 2.60f;
-
-    private float ancienVoltageJ2 = 0;
-    private float nouveauVoltageJ2 = 0;
+    // Seuil minimum (en Volt) pour detecter le passage du joueur 2
     private final float SEUIL_VOLTAGE_J2 = 1.70f;
 
     private int nbTourJoueur1 = 0;
@@ -89,13 +80,19 @@ public class ProjectM1Activity extends Activity {
                 ancienVoltage = nouveauVoltage;
                 nouveauVoltage = irVoltage;
 
+                //Si le voltage été haut (isTurnUp) et que maintenant il baisse
+                // == la voiture a depassee le capteur
                 if(irVoltage < SEUIL_VOLTAGE_J2 && isTurnUp){
                     isTurnUp=false;
                 }
 
                 isGrowingAncien = isGrowing;
+                //Si le voltage augmente, c'est qu'une voiture s'approche de + en + du capteur
                 isGrowing = nouveauVoltage > ancienVoltage;
-                if (!isGrowing & isGrowingAncien & !isTurnUp) {
+                //Si que le voltage augmentait juste avant (la voiture s'approchait)
+                //et le voltage diminue maintenant (la voiture s'éloigne du capteur)
+                //et qu'on a pas deja incrementer le compte tour
+                if ( isGrowingAncien & !isGrowing & !isTurnUp) {
                     if (ancienVoltage > SEUIL_VOLTAGE_J1) {
                         nbTourJoueur1++;
                         isTurnUp = true;
@@ -105,18 +102,6 @@ public class ProjectM1Activity extends Activity {
                     }
                 }
 
-                /*
-                nouveauVoltageJ1 = irVoltage;
-                if(ancienVoltageJ1 < SEUIL_VOLTAGE_J1 && nouveauVoltageJ1 > SEUIL_VOLTAGE_J1){
-                    nbTourJoueur1++;
-                }
-
-                ancienVoltageJ2 = nouveauVoltageJ2;
-                nouveauVoltageJ2 = irVoltage;
-                if(ancienVoltageJ2 < SEUIL_VOLTAGE_J2 && nouveauVoltageJ2 > SEUIL_VOLTAGE_J2){
-                    nbTourJoueur2++;
-                }
-*/
                 //mise à jour de la vue utilisateur
                 runOnUiThread(new Runnable() {
 
