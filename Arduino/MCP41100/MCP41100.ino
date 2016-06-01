@@ -14,49 +14,12 @@ void setup()
   Serial.begin(115200);
   pinMode (slaveSelectPin, OUTPUT);
   SPI.begin();
-  /*
-  // adjust high and low resistance of potentiometer
-  // adjust Highest Resistance .
-  digitalPotWrite(0x00);
-  delay(1000);
-  
-  // adjust  wiper in the  Mid point  .
-  digitalPotWrite(0x80);
-  delay(1000);
-  
-  // adjust Lowest Resistance .
-  digitalPotWrite(0xFF);
-  delay(1000);
-  
-  digitalPotWrite(0xFF);*/
 }
  
 void loop()
 {
-  /*
-  digitalPotWrite(0);  // valeur minimale
-  delay(1000); 
-  
-  digitalPotWrite(255);  // valeur maximale  
-  delay(500); 
-  
-  digitalPotWrite(128);  // valeur médiane
-  delay(1000);*/
-  /** declanche bien la voiture mais seulement autour de 250 - 255*/
-  /* 
-  for (int i=0; i <= 255/5; i++){
-    digitalPotWrite(i *5);
-    delay(150);
-  }
-  */
-  /*digitalPotWrite(5);  // valeur maximal*/
-
-  /*
-  digitalPotWrite(200);
-  delay(100);
-  */
-
-  for (int i=245; i <= 255; i++){
+/** declenche bien la voiture sur le circuit aussi (mais faut la lancer manuellement mais après c'est bon)*/
+   for (int i=252; i <= 255; i++){
     digitalPotWrite(i);
     delay(100);
   }
