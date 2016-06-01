@@ -7,7 +7,7 @@
 #define INT_SIZE 4 // un int est stocke sur 4 byte
 #define FLOAT_SIZE 4 // un float est stocke sur 4 byte
 #define IR1_SIZE FLOAT_SIZE // taille (en byte) prevu pour mettre les donnees du capteur infra-rouge 1 : un float
-#define MSG_LENGTH_TO_SEND IR1_SIZE + IR2_SIZE // taille (en byte) prevu pour le message qui transitera de l'arduino a l'android = taille des donnes des deux capteurs
+#define MSG_LENGTH_TO_SEND IR1_SIZE // taille (en byte) prevu pour le message qui transitera de l'arduino a l'android = taille des donnes des deux capteurs
 
 #define MSG_LENGTH_TO_RECEIVED 8 //taille (en byte) prevu pour le message qui transitera de l'android a l'arduino
 
