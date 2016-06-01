@@ -11,7 +11,8 @@ void setup() {
 void loop() {
   celsius = thermistor.readCelsius(); // Reading the value from the thermistor
 
-  Serial.print("Temperature : ");Serial.print(celsius);Serial.print((char)176);Serial.print("C \r\n"); // (char)176 == ascii code of ° (degree sign)
+  Serial.print("Temperature : ");
+  Serial.print(celsius);Serial.print((char)176);Serial.print("C \r\n"); // (char)176 == ascii code of ° (degree sign)
 
   delay(1000); // wait for a second
 }
