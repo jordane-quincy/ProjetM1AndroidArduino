@@ -181,8 +181,8 @@ public class ProjectM1Activity extends Activity {
         setContentView(R.layout.main);
 
         seekBar = (SeekBarHint) findViewById(R.id.seekBar);
-        seekBar.setMax(10);
-        seekBar.setProgress(3);
+        seekBar.setMax(40);
+        seekBar.setProgress(20);
         seekBar.incrementProgressBy(1);
         seekBar.setOnProgressChangeListener(new SeekBarHint.OnSeekBarHintProgressChangeListener() {
             @Override
@@ -197,7 +197,6 @@ public class ProjectM1Activity extends Activity {
         buttonSendDataView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                seekBarValue = seekBar.getProgress();
                 sendData(seekBarValue);
             }
         });
