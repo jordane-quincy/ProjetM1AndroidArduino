@@ -17,10 +17,17 @@ void setup()
 void loop()
 {
   /** declenche bien la voiture sur le circuit aussi (mais faut la lancer manuellement mais après c'est bon)*/
-   for (int i=252; i <= 255; i++){
+  /*for (int i=248; i <= 249; i++){
     digitalPotWrite(i);
     delay(100);
   }
+  */
+  /** declenche bien la voiture sur le circuit aussi (mais faut la lancer manuellement mais après c'est bon)*/
+  for (int i=0; i <= 1000; i++){
+    digitalPotWrite(250);
+    digitalPotWrite(0);
+  }
+  
 }
  
 int digitalPotWrite(int value)
