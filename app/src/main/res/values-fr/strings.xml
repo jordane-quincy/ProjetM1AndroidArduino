@@ -5,4 +5,5 @@
     <string name="nbTourJ1">Compteur de tour joueur 1</string>
     <string name="nbTourJ2">Compteur de tour joueur 2</string>
     <string name="arduinoDisconnected">Arduino déconnecté</string>
+    <string name="speed">Vitesse de %d</string>
 </resources>

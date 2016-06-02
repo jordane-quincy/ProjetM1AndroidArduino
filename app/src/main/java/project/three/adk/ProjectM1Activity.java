@@ -115,10 +115,10 @@ public class ProjectM1Activity extends Activity {
 
                     @Override
                     public void run() {
-                        String t = getApplicationContext().getResources().getString(R.string.nbTourJ1);
                         lapJ1.setText(String.valueOf(nbTourJoueur1));
                         lapJ2.setText(String.valueOf(nbTourJoueur2));
                         if(isDebugInfoShow) {
+                            buttonStateTextView.setVisibility(View.VISIBLE);
                             buttonStateTextView.setText("msg length : " + buffer.length + " = " + irVoltage + "V " + "\r\n" +
                                             "tour j1 :" + nbTourJoueur1 + "\r\n" +
                                             "tour j2 :" + nbTourJoueur2 + "\r\n" +
@@ -130,6 +130,9 @@ public class ProjectM1Activity extends Activity {
                                             "SEUIL_VOLTAGE_J2 : " + SEUIL_VOLTAGE_J2 + "\r\n" +
                                             "isTurnUp : " + isTurnUp + "\r\n"
                             );
+                        }else{
+                            //cacher les infos de debug
+                            buttonStateTextView.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -178,14 +181,15 @@ public class ProjectM1Activity extends Activity {
         setContentView(R.layout.main);
 
         seekBar = (SeekBarHint) findViewById(R.id.seekBar);
-        seekBar.setMax(255);
-        seekBar.setProgress(252);
+        seekBar.setMax(10);
+        seekBar.setProgress(3);
         seekBar.incrementProgressBy(1);
         seekBar.setOnProgressChangeListener(new SeekBarHint.OnSeekBarHintProgressChangeListener() {
             @Override
             public String onHintTextChanged(SeekBarHint seekBarHint, int progress) {
                 seekBarValue = seekBar.getProgress();
-                return String.format("Vitesse de %d", progress);
+                sendData(seekBarValue);
+                return String.format(getApplicationContext().getResources().getString(R.string.speed), progress);
             }
         });
 
@@ -194,7 +198,6 @@ public class ProjectM1Activity extends Activity {
             @Override
             public void onClick(View view) {
                 seekBarValue = seekBar.getProgress();
-
                 sendData(seekBarValue);
             }
         });
@@ -210,7 +213,7 @@ public class ProjectM1Activity extends Activity {
     }
 
     public void sendData(int vitesse) {
-        byte[] buffer = new byte[8];
+        byte[] buffer = new byte[4];
 
         buffer[0] = (byte) vitesse;
 
