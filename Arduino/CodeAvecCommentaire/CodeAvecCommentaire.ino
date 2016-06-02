@@ -8,7 +8,7 @@
 #define INT_SIZE 4 // un int est stocke sur 4 byte
 #define FLOAT_SIZE 4 // un float est stocke sur 4 byte
 #define IR1_SIZE FLOAT_SIZE // taille (en byte) prevu pour mettre les donnees du capteur infra-rouge 1 : un float
-#define MSG_LENGTH_TO_SEND IR1_SIZE // taille (en byte) prevu pour le message qui transitera de l'arduino a l'android = taille des donnes des deux capteurs
+#define MSG_LENGTH_TO_SEND IR1_SIZE // taille (en byte) prevu pour le message qui transitera de l'arduino a l'android = somme des tailles des donnes de chacun des capteurs
 
 #define MSG_LENGTH_TO_RECEIVED 8 //taille (en byte) prevu pour le message qui transitera de l'android a l'arduino
 
@@ -61,16 +61,13 @@ void loop() {
     //Partie reception donnees depuis android
     //len va contenir la longeur du message recu de l'android
     len = acc.read(msgReceived, MSG_LENGTH_TO_RECEIVED, 1);
-    //si on a bien reçu des donnes de l'android
+    //si on a bien reçu des donnees de l'android
     if(len > 0){
       memcpy(intConverter.byteArray, msgReceived, INT_SIZE); //on utilise le tableau de byte du converter pour y mettre les donnees du telephone
       int vitesse = intConverter.i;
       Serial.print("Recu : ");Serial.println(vitesse);
 
-        digitalPotWrite(0);
-        delay(40);        
-        digitalPotWrite(vitesse); // on modifie la resistance du MCP41100 en consequence
-        delay(40);
+      updateSpeed(vitesse);
     }
     
     //partie IR
@@ -104,6 +101,16 @@ float getVoltage(int pin)
   return (analogRead(pin) * 0.0048828125); // 0.0048828125 == (5 / 1024)
 }
 
+void updateSpeed(int duration){
+  if(duration >= 1) {
+    digitalPotWrite(0);
+    digitalPotWrite(250); // 255 force sur l'alimentation d'ou une deconnexion de l'android
+    delay(duration);
+  }else{
+    //0 == stop
+    digitalPotWrite(0);
+  }
+}
 
 int digitalPotWrite(int value)
 {
@@ -112,6 +119,7 @@ int digitalPotWrite(int value)
   SPI.transfer(0x11); 
   SPI.transfer(value);
   digitalWrite(SLAVE_SELECT_PIN, HIGH);
+  delay(20); // temps de prise en compte
 }
 
 
