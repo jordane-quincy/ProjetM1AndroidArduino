@@ -63,6 +63,7 @@ public class ProjectM1Activity extends Activity {
 
     private int nbTourJoueur1 = 0;
     private int nbTourJoueur2 = 0;
+    private int seekBarValue = 0;
     Runnable commRunnable = new Runnable() {
 
         @Override
@@ -115,8 +116,8 @@ public class ProjectM1Activity extends Activity {
                     @Override
                     public void run() {
                         String t = getApplicationContext().getResources().getString(R.string.nbTourJ1);
-                        lapJ1.setText(nbTourJoueur1);
-                        lapJ2.setText(nbTourJoueur2);
+                        lapJ1.setText(String.valueOf(nbTourJoueur1));
+                        lapJ2.setText(String.valueOf(nbTourJoueur2));
                         if(isDebugInfoShow) {
                             buttonStateTextView.setText("msg length : " + buffer.length + " = " + irVoltage + "V " + "\r\n" +
                                             "tour j1 :" + nbTourJoueur1 + "\r\n" +
@@ -178,11 +179,12 @@ public class ProjectM1Activity extends Activity {
 
         seekBar = (SeekBarHint) findViewById(R.id.seekBar);
         seekBar.setMax(255);
-        seekBar.setProgress(100);
-        seekBar.incrementProgressBy(5);
+        seekBar.setProgress(252);
+        seekBar.incrementProgressBy(1);
         seekBar.setOnProgressChangeListener(new SeekBarHint.OnSeekBarHintProgressChangeListener() {
             @Override
             public String onHintTextChanged(SeekBarHint seekBarHint, int progress) {
+                seekBarValue = seekBar.getProgress();
                 return String.format("Vitesse de %d", progress);
             }
         });
@@ -191,9 +193,8 @@ public class ProjectM1Activity extends Activity {
         buttonSendDataView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int seekBarValue = seekBar.getProgress();
+                seekBarValue = seekBar.getProgress();
 
-                Toast.makeText(getApplicationContext(), "sendData : " + seekBarValue, Toast.LENGTH_SHORT).show();
                 sendData(seekBarValue);
             }
         });
@@ -208,10 +209,10 @@ public class ProjectM1Activity extends Activity {
         vibrator = ((Vibrator) getSystemService(VIBRATOR_SERVICE));
     }
 
-    public void sendData(int nbBlink) {
+    public void sendData(int vitesse) {
         byte[] buffer = new byte[8];
 
-        buffer[0] = (byte) nbBlink; // button says off, light is on
+        buffer[0] = (byte) vitesse;
 
         if (mOutputStream != null) {
             try {
@@ -297,14 +298,14 @@ public class ProjectM1Activity extends Activity {
             mAccessory = null;
         }
     }
-
+/*
     public void startVibrate() {
         vibrator.vibrate(1000); //vibre pendant 1000 ms
     }
-
+*/
     private void manageArduinoDisconnected() {
         Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.arduinoDisconnected), Toast.LENGTH_LONG).show();
-        startVibrate();
+        //startVibrate();
         //fermeture de cette activity
         this.finish();
     }
