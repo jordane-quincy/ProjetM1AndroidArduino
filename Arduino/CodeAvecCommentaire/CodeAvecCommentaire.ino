@@ -52,24 +52,12 @@ void setup() {
   pinMode(INPUT_PIN_IR1, INPUT); //on configure le pin du capteur infraèrouge 1 comme etant une entree
   pinMode (SLAVE_SELECT_PIN, OUTPUT);
   SPI.begin();
+  digitalPotWrite(0); // init a la resistance maximale
 }
 
 //apres setup(), loop est lancee en boucle indefiniment (equivalent d'un while(true){} )
 void loop() {
   if (acc.isConnected()) {
-    //partie IR
-    float IR1_Voltage = getVoltage(INPUT_PIN_IR1); //obtention du voltage
-
-    Serial.print("IR1 :");Serial.print(IR1_Voltage);Serial.print("V \n");
-
-    ir1Converter.f = IR1_Voltage; // on set le voltage du capteur infra-rouge 1 dans le converter
-
-    // on recupere les donnees du capteur infra-rouge 1 sous forme de tableau de byte
-    memcpy(msgToSend, ir1Converter.byteArray, FLOAT_SIZE); // copie de FLOAT_SIZE octet (byte) du tableau de byte dans le message a envoyer a l'android
-
-    //Partie envoi a android
-    acc.write(msgToSend, MSG_LENGTH_TO_SEND);
-    
     //Partie reception donnees depuis android
     //len va contenir la longeur du message recu de l'android
     len = acc.read(msgReceived, MSG_LENGTH_TO_RECEIVED, 1);
@@ -79,10 +67,29 @@ void loop() {
       int vitesse = intConverter.i;
       Serial.print("Recu : ");Serial.println(vitesse);
 
-      digitalPotWrite(vitesse); // on fait clignoter X fois la led
+        digitalPotWrite(0);
+        delay(40);        
+        digitalPotWrite(vitesse); // on modifie la resistance du MCP41100 en consequence
+        delay(40);
     }
+    
+    //partie IR
+    float IR1_Voltage = getVoltage(INPUT_PIN_IR1); //obtention du voltage
 
-    delay(100); // attendre 100ms
+    //Serial.print("IR1 :");Serial.print(IR1_Voltage);Serial.print("V \n");
+
+    ir1Converter.f = IR1_Voltage; // on set le voltage du capteur infra-rouge 1 dans le converter
+
+    // on recupere les donnees du capteur infra-rouge 1 sous forme de tableau de byte
+    memcpy(msgToSend, ir1Converter.byteArray, FLOAT_SIZE); // copie de FLOAT_SIZE octet (byte) du tableau de byte dans le message a envoyer a l'android
+
+    //Partie envoi a android
+    acc.write(msgToSend, MSG_LENGTH_TO_SEND);
+    
+    if(len = 0){
+      //rien recu d'android
+      delay(100); // attendre 100ms
+    }
   } else {
     Serial.print("AndroidAccessory not connected at ");Serial.println(millis());
 
@@ -101,7 +108,7 @@ float getVoltage(int pin)
 int digitalPotWrite(int value)
 {
   Serial.print("digitalPotWrite ");Serial.print(value);Serial.print(" at ");Serial.println(millis());
-  analogWrite(SLAVE_SELECT_PIN, LOW);
+  digitalWrite(SLAVE_SELECT_PIN, LOW);
   SPI.transfer(0x11); 
   SPI.transfer(value);
   digitalWrite(SLAVE_SELECT_PIN, HIGH);
